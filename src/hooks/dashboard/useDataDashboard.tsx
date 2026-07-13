@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getDashboardMetrics, getTaskDashboard  } from "../../services/service";
 import type { TaskVagasProps, StatCardProps, DashboardProjectMetric, ModalState } from "../../types/interface";
 
@@ -14,12 +14,11 @@ export const useDataDashboard = ()=>{
         data: null,
       });
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
       setModal({ isOpen: false, type: null, data: null });
-    };
+    }, []);
 
-   
-    //get Budget and Projects 
+
     const getdataProjects = useCallback(async () => {
       try {
         const { data, error } = await getDashboardMetrics();
@@ -63,15 +62,18 @@ export const useDataDashboard = ()=>{
 
       fetchDashboardData();
     }, [getdataProjects, getTask]);
-      
-      const totalMensual = dashboardMetrics.reduce((acc, current) => acc + current.budget, 0)
     
+    const totalGoal = useMemo(() => {
+      return dashboardMetrics.reduce((acc: number, currValue: DashboardProjectMetric) => {
+        return acc + currValue.budget;
+      }, 0);
+    }, [dashboardMetrics]);
     
-      const dataStatCard: StatCardProps[] = [
+      const dataStatCard = useMemo((): StatCardProps[] => [
       {
         title: 'Total Mensual (USD)',
         icon: '💰',
-        data: `$${totalMensual}`,
+        data: `$${totalGoal}`,
         color: 'resaltado',
       },
       {
@@ -86,9 +88,9 @@ export const useDataDashboard = ()=>{
         data: `${dashboardMetrics.length} Activos`,
         color: 'resaltado',
       }
-      ]
+      ], [totalGoal, dataTaskVagas.length, dashboardMetrics.length])
     
-      const totalGoal = dashboardMetrics.reduce((acc: number, currValue: DashboardProjectMetric) => acc + currValue.budget, 0)
+
 
 
     return {

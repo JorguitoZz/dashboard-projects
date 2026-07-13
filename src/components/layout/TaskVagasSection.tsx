@@ -1,7 +1,7 @@
 import type { LayoutProps } from "../../types/interface";
+import { memo } from "react";
 
-export const TaskVagasSection = ({children}:LayoutProps) =>{
-    
+export const TaskVagasSection = memo(({children}:LayoutProps) =>{
 
     return(
         <section className="w-[90%] mx-auto pb-6 lg:w-[70%]">
@@ -11,4 +11,6 @@ export const TaskVagasSection = ({children}:LayoutProps) =>{
             </div>
         </section>
     )
-}
+})
+
+TaskVagasSection.displayName = "TaskVagasSection";

@@ -3,8 +3,11 @@ import type { ModalProps } from "../../types/interface";
 
 export const TaskModalComplete = ({ closeModal, onSuccess, task }: ModalProps) => {
   
-  const {handlerSubmit} = useCompleteTask({closeModal, onSuccess, taskID : task!.id})
+  const {handlerSubmit} = useCompleteTask({closeModal, onSuccess, taskID : task?.id})
   
+  if (!task) return null;
+  
+
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-background-dark/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
       

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { IncomeItem } from "../components/dashboard/IncomeItem";
 import { StatCard } from "../components/dashboard/StatCard";
 import { TaskVagas } from "../components/dashboard/TaskVagas";
@@ -7,7 +8,9 @@ import { TaskVagasSection } from "../components/layout/TaskVagasSection";
 import { EditTaskModal } from "../components/projects/EditTaskModal";
 import { TaskModalComplete } from "../components/projects/TaskModalComplete";
 import { useDataDashboard } from "../hooks/dashboard/useDataDashboard";
-import type { TaskItemProps } from "../types/interface";
+import type { TaskItemProps} from "../types/interface";
+import { deleteTask } from "../services/service";
+
 
 export const HomeView = () => {
 
@@ -21,21 +24,38 @@ const {
         getTask,
         closeModal
  } = useDataDashboard()  
+ 
+ const handlerDeleteTask = useCallback( async(id: string) =>{
+ 
+ const siBorrar = window.confirm("¿Seguro, Jorge?");
+ if (!siBorrar) return;
 
+    if(id){
+      const res = await deleteTask(id)
+  
+      if(res.success){
+        console.log('borrado con exito')
+        await getTask()
+      }else{
+        console.error(res.error)
+      }
+    }
+
+  }, [getTask])
 
 return (
 
     <div className="pb-24 lg:pb-8"> {/* Padding extra en mobile para que la Sidebar no tape el contenido */}
         <StatCardsSection>
           {dataStatCard.map((e, i) => (
-            <StatCard key={i} title={e.title} icon={e.icon} data={e.data} color={e.color}/>
+            <StatCard key={i} title={e.title} icon={e.icon} data={e.data} color={e.color} />
           ))}
         </StatCardsSection>
 
         <div className="flex flex-col lg:flex-row lg:w-[90%] lg:mx-auto lg:gap-5">
           <TaskVagasSection>
             {dataTaskVagas.map(task => (
-              <TaskVagas key={task.id} {...task} setModal={setModal} onSuccess={getTask} />
+              <TaskVagas key={task.id} {...task} setModal={setModal} handlerDeleteTask={handlerDeleteTask} />
             ))}
           </TaskVagasSection>
 

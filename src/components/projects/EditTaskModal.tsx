@@ -6,9 +6,11 @@ interface EditModalProps extends ModalProps {
 }
 
 export const EditTaskModal = ({ closeModal, task, onSuccess }: EditModalProps) => {
-  
-  const {handleSubmit} = useEditTaskModal({taskID: task!.id, closeModal, onSuccess})
 
+  
+  const {handleSubmit} = useEditTaskModal({taskID: task?.id, closeModal, onSuccess})
+  
+  if (!task) return null;
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-background-dark/80 backdrop-blur-md p-4 animate-in fade-in duration-300">

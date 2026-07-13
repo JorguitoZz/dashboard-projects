@@ -1,6 +1,7 @@
+import { memo } from "react";
 import type { IncomeItemProps } from "../../types/interface";
 
-export const IncomeItem = ({clientName, amount, totalGoal = 1}: IncomeItemProps) =>{
+export const IncomeItem = memo(({clientName, amount, totalGoal = 1}: IncomeItemProps) =>{
 
     const procentage = (amount / totalGoal) * 100
     const clampedPercentage = Math.min(procentage, 100)
@@ -14,4 +15,6 @@ export const IncomeItem = ({clientName, amount, totalGoal = 1}: IncomeItemProps)
             <div className="w-full h-1.5 bg-stroke rounded overflow-hidden"><div style={{ width: `${clampedPercentage}%`}} className=" h-full bg-resaltado"></div></div>
         </div>    
     )
-}
+})
+
+IncomeItem.displayName = "IncomeItem"
