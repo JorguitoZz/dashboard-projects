@@ -18,7 +18,6 @@ export const useTaskProjects = (
 
     console.log('Ejecutando fetch de tareas...');
     setIsLoading(true);
-    
     try {
       const response = await getTask(projectID);
       
@@ -35,14 +34,14 @@ export const useTaskProjects = (
 
       setTasks((data as TaskItemProps[]) || []);
       console.log('Tareas cargadas con éxito');
-      
+
 
     } catch (error) {
       console.error("Error en la petición:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [projectID]); // Ya no necesita setRefreshTrigger en las dependencias
+  }, [projectID]);
 
   useEffect(() => {
     fetchTask();

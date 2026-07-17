@@ -10,7 +10,7 @@ export const TaskVagas = ({
   category,
   setModal, 
   onSuccess, 
-}: TaskVagasProps & { onSuccess: () => Promise<void> }) => {
+}: TaskVagasProps & { onSuccess: () => void }) => {
 
 
   const isCompleted = status === 'success';

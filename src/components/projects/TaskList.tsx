@@ -8,7 +8,12 @@ import type { TaskItemProps } from "../../types/interface"
 
 export const TaskList = ({ projectID, setRefreshTrigger }: { projectID: string, setRefreshTrigger: React.Dispatch<React.SetStateAction<number>>; }) => {
   
-  const { closeModal, isLoading, tasks, modal, setModal, fetchTask } = useTaskProjects(projectID, setRefreshTrigger)
+  const { closeModal, isLoading, tasks, modal, setModal, fetchTask } = useTaskProjects(projectID)
+
+  const handleActualizacion = () =>{
+    fetchTask()
+    setRefreshTrigger(prev => prev + 1)
+  }
 
   return (
     <section className="flex flex-col">
@@ -35,7 +40,7 @@ export const TaskList = ({ projectID, setRefreshTrigger }: { projectID: string, 
       ) : tasks.length ? (
         <div className="custom-scrollbar max-h-87.5 overflow-y-auto pr-3 [mask-image:linear-gradient(to_bottom,white_85%,transparent)] flex flex-col gap-3">
           {tasks.map((task) => (
-            <TaskVagas key={task.id} {...task} setModal={setModal} onSuccess={fetchTask} />
+            <TaskVagas key={task.id} {...task} setModal={setModal} onSuccess={handleActualizacion} />
           ))}
         </div>
       ) : (
@@ -49,7 +54,7 @@ export const TaskList = ({ projectID, setRefreshTrigger }: { projectID: string, 
         <AddTaskModal 
           closeModal={closeModal} 
           projectID={projectID} 
-          onSuccess={fetchTask} 
+          onSuccess={handleActualizacion} 
         />
       )}
 
@@ -57,7 +62,7 @@ export const TaskList = ({ projectID, setRefreshTrigger }: { projectID: string, 
         <EditTaskModal 
           closeModal={closeModal} 
           task={modal.data as TaskItemProps | null} 
-          onSuccess={fetchTask} 
+          onSuccess={handleActualizacion} 
         />
       )}
 
@@ -65,7 +70,7 @@ export const TaskList = ({ projectID, setRefreshTrigger }: { projectID: string, 
         <TaskModalComplete 
           closeModal={closeModal} 
           task={modal.data as TaskItemProps | null} 
-          onSuccess={fetchTask} 
+          onSuccess={handleActualizacion} 
 
         />
       )}
