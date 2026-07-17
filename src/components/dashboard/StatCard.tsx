@@ -1,6 +1,6 @@
 import type { StatCardProps } from "../../types/interface";
 
-export const StatCard = ({title, icon, data, estadistica, color}: StatCardProps)=>{
+export const StatCard = ({title, icon, data}: StatCardProps)=>{
 
 
     return(
@@ -11,7 +11,6 @@ export const StatCard = ({title, icon, data, estadistica, color}: StatCardProps)
             </div>
               
             <p className="text-primary text-[28px] font-bold">{data}</p>
-            <p  className={`text-${color} text-[12px] font-medium`}>{estadistica}</p>
         </article>
     )
 }
