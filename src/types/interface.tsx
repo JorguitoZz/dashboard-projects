@@ -66,7 +66,7 @@ export interface LayoutProps {
 
 export interface ModalProps {
   closeModal: () => void;
-  projectID?: string | null;
+  projectID?: string;
   onSuccess?: () => void;
   task?: TaskItemProps | null;
 }
