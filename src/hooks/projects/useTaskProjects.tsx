@@ -2,10 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import type { ModalState, TaskItemProps } from "../../types/interface"; // Usamos solo una interfaz consistente
 import { getTask } from "../../services/service";
 
-// 1. Corregido el nombre a useTaskProjects para que coincida con tu import externo
 export const useTaskProjects = (
   projectID: string | null, 
-  setRefreshTrigger: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [tasks, setTasks] = useState<TaskItemProps[]>([]);
@@ -35,11 +33,9 @@ export const useTaskProjects = (
         return;
       }
 
-      // Tipamos correctamente usando la interfaz que maneja tu estado local
       setTasks((data as TaskItemProps[]) || []);
       console.log('Tareas cargadas con éxito');
       
-      // Se eliminó setRefreshTrigger de aquí para evitar re-renders infinitos al leer datos.
 
     } catch (error) {
       console.error("Error en la petición:", error);
