@@ -1,54 +1,23 @@
-import { useCallback, useEffect, useState } from "react";
 import { ProjectCard } from "../components/projects/ProjectCard";
 import { AddProjectModal } from "../components/projects/AddProjectModal";
 import { SkeletonProjectCard } from "../components/skeletons/SkeletonProjectCard";
-import { getProjects } from "../services/service";
-import type { Project, ModalState } from "../types/interface";
-
+import { useGetProjects } from "../hooks/projects/useGetProjects";
+import type { Project, } from "../types/interface";
+import { use, useCallback } from "react";
 
 
 export const Projects = () => {
+  
+  const {projectList, openModal, handlerOpenModal, isLoading, fetchProjects} = useGetProjects()
+  
+  const handlerModalClose = useCallback(() =>{
+    handlerOpenModal({isOpen: false, data: null})
+  }, [handlerOpenModal])
 
-  const [projectList, setProjectList] = useState<Project[]>([])
-
-  const [openModal, setOpenModal] = useState<ModalState >({
-        isOpen: false,
-        data: null,
-  });
-
-  const handlerOpenModal = ({isOpen, data}: ModalState) =>{
-    setOpenModal({
-      isOpen,
-      data
-    })
-  }
-
-  const [isLoading, setLoading] = useState<boolean>(true)
-
-
-  const fetchProjects = useCallback(async () => {
-  console.log('ejecutando');
-  setLoading(true); // Buenísima práctica: iniciar la carga aquí
-  try {
-    const { data, error } = await getProjects();
-      
-    if (!error) {
-      setProjectList((data as Project[]) || []);
-    }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setLoading(false); // Se ejecuta tanto si sale bien como si hay error
-  }
-}, []);
-
-useEffect(() => {
-  const loadData = async () => {
-    await fetchProjects();
-  };
-
-  loadData();
-}, [fetchProjects]);
+  const handlerModalOpen = useCallback(() =>{
+    handlerOpenModal({isOpen: true, data: null})
+  },[handlerOpenModal])
+   
 
   return (
     <section className="w-[95%] py-5 m-auto">
@@ -63,7 +32,7 @@ useEffect(() => {
 
         <button 
           className="flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-4 py-2 rounded-lg text-sm font-bold  hover:text-background-dark transition-all duration-300 group" 
-          onClick={()=>{setOpenModal({isOpen: true, data: null})}}
+          onClick={()=>{handlerModalOpen()}}
           >
           <span className="material-symbols-outlined text-[18px] group-hover:rotate-90 transition-transform">add</span>
           Add Project
@@ -89,7 +58,7 @@ useEffect(() => {
         
       </div>
 
-      {openModal.isOpen && <AddProjectModal project={openModal.data as Project | null} onSuccess={fetchProjects} closeModal={()=>{handlerOpenModal({isOpen: false, data: null})}}/>}  
+      {openModal.isOpen && <AddProjectModal project={openModal.data as Project | null} onSuccess={fetchProjects} closeModal={()=>{handlerModalClose()}}/>}  
 
     </section>
   )

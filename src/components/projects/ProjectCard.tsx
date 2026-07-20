@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Badge } from "../ui/Badge";
 import type { Project} from "../../types/interface";
 import { Link } from "react-router-dom";
 import { deleteProject } from "../../services/service";
 
-export const ProjectCard = ({
+
+export const ProjectCard = memo(({
   id,
   client_name,
   status,
@@ -24,7 +25,7 @@ export const ProjectCard = ({
   // Lógica para que el color del pulso dependa del status
   const statusColor = status === "Active" ? "bg-[#10b981]" : "bg-amber-500";
 
-  const handlerDelete = async () => {
+  const handlerDelete = useCallback( async () => {
     try {
       const { error } = await deleteProject(id);
 
@@ -41,7 +42,7 @@ export const ProjectCard = ({
         error instanceof Error ? error.message : "Error desconocido";
       return { success: false, error: message };
     }
-  };
+  }, [id, onSucces]);
   
 
   const data: Project = {
@@ -212,4 +213,4 @@ export const ProjectCard = ({
       </article>
     </Link>
   );
-};
+});
