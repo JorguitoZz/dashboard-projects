@@ -51,7 +51,7 @@ export interface StatCardProps {
   title: string;
   icon: React.ReactNode;
   data: string;
-  color: 'resaltado' | 'blue-400' | 'amber-400';
+  color?: 'resaltado' | 'blue-400' | 'amber-400';
 }
 
 export interface IncomeItemProps {
@@ -66,7 +66,7 @@ export interface LayoutProps {
 
 export interface ModalProps {
   closeModal: () => void;
-  projectID?: string | null;
+  projectID?: string;
   onSuccess?: () => void;
   task?: TaskItemProps | null;
 }

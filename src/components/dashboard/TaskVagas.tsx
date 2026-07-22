@@ -12,8 +12,13 @@ export const TaskVagas = memo(({
   description, 
   category,
   setModal, 
+<<<<<<< HEAD
   handlerDeleteTask
 }: ExtendedTaskVagasProps) => {
+=======
+  onSuccess, 
+}: TaskVagasProps & { onSuccess: () => void }) => {
+>>>>>>> main
 
 
   const isCompleted = status === 'success';

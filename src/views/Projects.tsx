@@ -3,7 +3,7 @@ import { AddProjectModal } from "../components/projects/AddProjectModal";
 import { SkeletonProjectCard } from "../components/skeletons/SkeletonProjectCard";
 import { useGetProjects } from "../hooks/projects/useGetProjects";
 import type { Project, } from "../types/interface";
-import { use, useCallback } from "react";
+import { useCallback } from "react";
 
 
 export const Projects = () => {
