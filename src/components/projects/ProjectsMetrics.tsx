@@ -1,6 +1,7 @@
+import { memo } from "react";
 import type { ProjectsMetricsProps } from "../../types/interface";
 
-export const ProjectsMetrics = ({ title, data, porcentaje, icon, isPositive }: ProjectsMetricsProps) => {
+export const ProjectsMetrics = memo(({ title, data, porcentaje, icon, isPositive }: ProjectsMetricsProps) => {
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-card p-6 shadow-sm">
       <div className="flex items-center justify-between">
@@ -24,4 +25,4 @@ export const ProjectsMetrics = ({ title, data, porcentaje, icon, isPositive }: P
       </div>
     </div>
   );
-};
+});

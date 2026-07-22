@@ -5,8 +5,9 @@ import { AddTaskModal } from "./AddTaskModal";
 import { EditTaskModal } from "./EditTaskModal";
 import { TaskModalComplete } from "./TaskModalComplete";
 import type { TaskItemProps } from "../../types/interface"
+import { memo } from "react";
 
-export const TaskList = ({ projectID, setRefreshTrigger }: { projectID: string, setRefreshTrigger: React.Dispatch<React.SetStateAction<number>>; }) => {
+export const TaskList = memo(({ projectID, setRefreshTrigger }: { projectID: string, setRefreshTrigger: React.Dispatch<React.SetStateAction<number>>; }) => {
   
   const { closeModal, isLoading, tasks, modal, setModal, fetchTask } = useTaskProjects(projectID)
 
@@ -76,4 +77,6 @@ export const TaskList = ({ projectID, setRefreshTrigger }: { projectID: string, 
       )}
     </section>
   );
-};
+});
+
+TaskList.displayName = "TaskList";

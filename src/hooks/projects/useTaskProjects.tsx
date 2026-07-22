@@ -16,7 +16,6 @@ export const useTaskProjects = (
   const fetchTask = useCallback(async () => {
     if (!projectID) return; // Validación temprana antes de activar loaders innecesarios
 
-    console.log('Ejecutando fetch de tareas...');
     setIsLoading(true);
     try {
       const response = await getTask(projectID);
@@ -33,8 +32,6 @@ export const useTaskProjects = (
       }
 
       setTasks((data as TaskItemProps[]) || []);
-      console.log('Tareas cargadas con éxito');
-
 
     } catch (error) {
       console.error("Error en la petición:", error);
@@ -47,9 +44,9 @@ export const useTaskProjects = (
     fetchTask();
   }, [projectID, fetchTask]);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setModal({ isOpen: false, type: null, data: null });
-  };
+  }, []);
 
   return {
     closeModal,

@@ -23,7 +23,6 @@ export const TaskVagas = memo(({
       const res = await deleteTask(id);
   
       if (res.success) {
-        console.log('borrado con exito');
         await onSuccess();
       } else {
         console.error(res.error);

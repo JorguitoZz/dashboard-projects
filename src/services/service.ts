@@ -198,6 +198,7 @@ export const getTaskComplete = async (projectID: string): Promise<ServiceRespons
       // Ahora este objeto calza perfecto con ServiceResponseData
       return { data: null, error: { message: error.message } };
     }
+    
 
     // data as TaskHistoryItem[] mapea el tipado de Supabase con tu interfaz
     return { data: (data as TaskHistoryItem[]) || [], error: null };

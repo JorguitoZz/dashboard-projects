@@ -1,7 +1,8 @@
+import { memo } from "react";
 import { useHistoryTask } from "../../hooks/tasks/useHistoryTask";
 import { HistoryItem } from "./HistoryItem";
 
-export const TaskHistory = ({ projectID, dataRefresh }: { projectID: string, dataRefresh: number }) => {
+export const TaskHistory = memo(({ projectID, dataRefresh }: { projectID: string, dataRefresh: number }) => {
 
   const taskHistory = useHistoryTask(projectID, dataRefresh);
 
@@ -21,9 +22,9 @@ export const TaskHistory = ({ projectID, dataRefresh }: { projectID: string, dat
         {/* Contenedor con Scroll - Max height aproximado para ~5 items antes de scrollear */}
         <div className="max-h-72.5 overflow-y-auto divide-y divide-slate-800 custom-scrollbar">
           {taskHistory && taskHistory.length > 0 ? (
-            taskHistory.map((task, index) => (
+            taskHistory.map((task) => (
               <HistoryItem 
-                key={index} 
+                key={task.title} 
                 title={task.title} 
                 completed_at={task.completed_at} 
               />
@@ -44,4 +45,6 @@ export const TaskHistory = ({ projectID, dataRefresh }: { projectID: string, dat
       </div>
     </section>
   );
-};
+});
+
+TaskHistory.displayName = "TaskHistory";

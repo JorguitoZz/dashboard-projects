@@ -1,7 +1,8 @@
+import { memo } from "react";
 import type { TaskHistoryItem } from "../../types/interface";
 import { formatHistoryDate } from "../../utils/formatDate"; // Ajusta la ruta a donde guardes la función
 
-export const HistoryItem = ({ title, completed_at }: TaskHistoryItem) => {
+export const HistoryItem = memo(({ title, completed_at }: TaskHistoryItem) => {
   return (
     <div className="flex items-center justify-between p-4 hover:bg-slate-800/50 transition-colors group">
       <div className="flex items-center gap-3">
@@ -18,4 +19,6 @@ export const HistoryItem = ({ title, completed_at }: TaskHistoryItem) => {
       </span>
     </div>
   );
-};
+});
+
+HistoryItem.displayName = "HistoryItem"

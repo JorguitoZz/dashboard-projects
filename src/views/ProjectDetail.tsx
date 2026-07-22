@@ -39,7 +39,6 @@ export const ProjectDetail = () => {
       {/* PASO 2: Renderizado Dinámico de las Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-10">
         {loading || !metrics ? (
-          // Estado de carga básico para las 3 tarjetas (puedes meter un esqueleto aquí si quieres)
           <div className="col-span-3 text-slate-500 text-sm animate-pulse">
             Calculando métricas en tiempo real...
           </div>
