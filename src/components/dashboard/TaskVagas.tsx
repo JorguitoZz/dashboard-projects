@@ -1,9 +1,7 @@
 import { Badge } from "../ui/Badge";
 import type { TaskVagasProps } from "../../types/interface";
 import { memo } from "react";
-interface ExtendedTaskVagasProps extends TaskVagasProps {
-  handlerDeleteTask: (id: string) => Promise<void>;
-}
+import { deleteTask } from "../../services/service";
 
 export const TaskVagas = memo(({
   id,
@@ -12,17 +10,26 @@ export const TaskVagas = memo(({
   description, 
   category,
   setModal, 
-<<<<<<< HEAD
-  handlerDeleteTask
-}: ExtendedTaskVagasProps) => {
-=======
   onSuccess, 
 }: TaskVagasProps & { onSuccess: () => void }) => {
->>>>>>> main
-
 
   const isCompleted = status === 'success';
+
+  const handlerDeleteTask = async () => {
+    const siBorrar = window.confirm("¿Seguro, Jorge?");
+    if (!siBorrar) return;
+
+    if (id) {
+      const res = await deleteTask(id);
   
+      if (res.success) {
+        console.log('borrado con exito');
+        await onSuccess();
+      } else {
+        console.error(res.error);
+      }
+    }
+  };
 
   return (
     <article className={`flex flex-col gap-3 bg-fondo-2 p-5 rounded-2xl border transition-all duration-300 group
@@ -85,7 +92,7 @@ export const TaskVagas = memo(({
           </button>
           
           <button 
-            onClick={() => id && handlerDeleteTask(id!)} 
+            onClick={handlerDeleteTask}
             className="p-2 hover:bg-red-500/10 rounded-xl transition-colors text-secundary hover:text-red-500 flex items-center justify-center"
             title="Borrar"
           >
@@ -96,7 +103,6 @@ export const TaskVagas = memo(({
       </div>
     </article>
   );
-})
+});
 
 TaskVagas.displayName = "TaskVagas";
-
