@@ -1,8 +1,8 @@
-import React from "react";
+import { memo } from "react";
 import type { StatCardProps } from "../../types/interface";
 
 
-export const StatCard = React.memo(({title, icon, data}: StatCardProps)=>{
+export const StatCard = memo(({title, icon, data}: StatCardProps)=>{
   
 
     return(
