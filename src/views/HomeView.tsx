@@ -9,7 +9,6 @@ import { EditTaskModal } from "../components/projects/EditTaskModal";
 import { TaskModalComplete } from "../components/projects/TaskModalComplete";
 import { useDataDashboard } from "../hooks/dashboard/useDataDashboard";
 import type { TaskItemProps} from "../types/interface";
-import { deleteTask } from "../services/service";
 
 
 export const HomeView = () => {
@@ -25,22 +24,8 @@ const {
         closeModal
  } = useDataDashboard()  
  
- const handlerDeleteTask = useCallback( async(id: string) =>{
- 
- const siBorrar = window.confirm("¿Seguro, Jorge?");
- if (!siBorrar) return;
-
-    if(id){
-      const res = await deleteTask(id)
-  
-      if(res.success){
-        console.log('borrado con exito')
+ const onSuccess = useCallback( async() =>{
         await getTask()
-      }else{
-        console.error(res.error)
-      }
-    }
-
   }, [getTask])
 
 return (
@@ -55,7 +40,7 @@ return (
         <div className="flex flex-col lg:flex-row lg:w-[90%] lg:mx-auto lg:gap-5">
           <TaskVagasSection>
             {dataTaskVagas.map(task => (
-              <TaskVagas key={task.id} {...task} setModal={setModal} handlerDeleteTask={handlerDeleteTask} />
+              <TaskVagas key={task.id} {...task} setModal={setModal} onSuccess={onSuccess} />
             ))}
           </TaskVagasSection>
 
