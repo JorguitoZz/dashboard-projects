@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase"
+import { createClient } from "@/lib/supabase/client"
 
 import type { 
   DataProyectType, 
@@ -8,12 +8,14 @@ import type {
   TaskHistoryItem, 
   ProjectDashboardMetrics,
   DashboardProjectMetric,
-  TaskVagasProps
+  TaskVagasProps,
+  Project,
+  ProjectBasicInfo
 } from "../types/interface"
 
 export const insertProject = async(dataProyect: DataProyectType ) : Promise<ServiceResponse>=>{
   try {
-    const { error } = await supabase
+    const { error } = await createClient()
     .from('projects')
     .insert([dataProyect])
     .select()
@@ -31,7 +33,7 @@ export const insertProject = async(dataProyect: DataProyectType ) : Promise<Serv
 
 export const editProject = async (id: string, dataActualizar: Omit<DataProyectType, 'status'>): Promise<ServiceResponse> => {
   try {
-    const { error } = await supabase
+    const { error } = await createClient()
       .from('projects')
       .update(dataActualizar)
       .eq('id', id);
@@ -49,7 +51,7 @@ export const editProject = async (id: string, dataActualizar: Omit<DataProyectTy
 
 export const getProjects = async()=>{
   try {
-    const response = await supabase
+    const response = await createClient()
     .from('projects')
     .select('*')
     .order('inserted_at', {ascending: false})
@@ -64,7 +66,7 @@ export const getTask = async(projectID: string | null) => {
   try{
 
     if (projectID) {
-      const response = await supabase
+      const response = await createClient()
       .from('tasks')
       .select('*')
       .eq('project_id', projectID)
@@ -75,7 +77,7 @@ export const getTask = async(projectID: string | null) => {
     }
     
     
-      const response = await supabase
+      const response = await createClient()
       .from('tasks')
       .select('*')
       .eq('is_completed', false)
@@ -91,7 +93,7 @@ export const getTask = async(projectID: string | null) => {
 
 export const insertTask = async(dataTask: TaskItemProps )=>{
   try {
-    const response = await supabase
+    const response = await createClient()
     .from('tasks')
     .insert([dataTask])
     .select()
@@ -104,7 +106,7 @@ export const insertTask = async(dataTask: TaskItemProps )=>{
 
 export const editTask = async (id: string, dataActualizar: Omit<TaskItemProps, 'id'>): Promise<ServiceResponse> => {
   try {
-    const { error } = await supabase
+    const { error } = await createClient()
       .from('tasks')
       .update(dataActualizar)
       .eq('id', id);
@@ -126,7 +128,7 @@ export const deleteTask = async (id: string) : Promise<ServiceResponse> =>{
   }
 
   try {
-    const { error } = await supabase
+    const { error } = await createClient()
       .from('tasks')
       .delete()
       .eq('id', id);
@@ -151,7 +153,7 @@ export const completeTask = async(hours: number, id: string): Promise<ServiceRes
   }
 
   try {
-    const { error } = await supabase
+    const { error } = await createClient()
     .from('tasks')
     .update(dataActualizar)
     .eq('id', id)
@@ -167,7 +169,7 @@ export const completeTask = async(hours: number, id: string): Promise<ServiceRes
 
 export const deleteProject = async(id: string) : Promise<ServiceResponse> =>{
   try {
-    const { error } = await supabase
+    const { error } = await createClient()
     .from("projects")
     .delete()
     .eq('id', id)
@@ -186,7 +188,7 @@ export const deleteProject = async(id: string) : Promise<ServiceResponse> =>{
 // Get Historial limitado a las últimas 10 completadas
 export const getTaskComplete = async (projectID: string): Promise<ServiceResponseData<TaskHistoryItem[]>> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await createClient()
       .from('tasks')
       .select('title, completed_at')
       .eq('project_id', projectID)
@@ -200,7 +202,7 @@ export const getTaskComplete = async (projectID: string): Promise<ServiceRespons
     }
     
 
-    // data as TaskHistoryItem[] mapea el tipado de Supabase con tu interfaz
+    // data as TaskHistoryItem[] mapea el tipado de createClient() con tu interfaz
     return { data: (data as TaskHistoryItem[]) || [], error: null };
 
   } catch (error) {
@@ -214,7 +216,7 @@ export const getProjectsMetrics = async (projectID: string): Promise<ServiceResp
   
   try {
 
-    const { data, error } = await supabase
+    const { data, error } = await createClient()
       .from('project_dashboard_metrics')
       .select('*')
       .eq('project_id', projectID)
@@ -233,10 +235,29 @@ export const getProjectsMetrics = async (projectID: string): Promise<ServiceResp
 
 }
 
+export const getProject = async(projectID: string) : Promise<ServiceResponseData<ProjectBasicInfo>>=>{
+  try {
+    const { data, error } = await createClient()
+    .from('projects')
+    .select('client_name, description')
+    .eq('id', projectID)
+    .single()
+
+    if (error) {
+      return { data: null, error: { message: error.message } };
+    }  
+    return { data: data as ProjectBasicInfo, error: null };
+    
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error desconocido";
+    return { data: null, error: { message } };
+  }
+}
+
 
 export const getDashboardMetrics = async (): Promise<ServiceResponseData<DashboardProjectMetric[]>> => {
   try {
-    const {data, error} = await supabase
+    const {data, error} = await createClient()
     .from('projects')
     .select('client_name, budget')
 
@@ -253,22 +274,33 @@ export const getDashboardMetrics = async (): Promise<ServiceResponseData<Dashboa
 }
 
 export const getTaskDashboard = async (): Promise<ServiceResponseData<TaskVagasProps[]>> => {
-  try{
-    
-      const {data, error} = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('is_completed', false)
-      .order('inserted_at', { ascending: false })
-    
-      if(error){
-      return { data: null, error: { message: error.message } }; 
+  try {
+    // 1. Resolver el cliente de Supabase
+    const supabase = createClient()
+
+    // 2. Obtener el usuario actual
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return { data: null, error: { message: "Usuario no autenticado" } }
     }
 
-      return { data: data, error: null };
+    // 3. Consultar las tareas filtrando por el user_id
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('user_id', user.id) // 👈 Filtra por el usuario logueado
+      .eq('is_completed', false)
+      .order('inserted_at', { ascending: false })
 
-  }catch(error){
-      const message = error instanceof Error ? error.message : "Error desconocido";
-      return { data: null, error: { message } };
+    if (error) {
+      return { data: null, error: { message: error.message } }
+    }
+
+    return { data, error: null }
+
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error desconocido"
+    return { data: null, error: { message } }
   }
 }

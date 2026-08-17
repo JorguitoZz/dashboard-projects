@@ -10,7 +10,6 @@ import { TaskModalComplete } from "../components/projects/TaskModalComplete";
 import { useDataDashboard } from "../hooks/dashboard/useDataDashboard";
 import type { TaskItemProps} from "../types/interface";
 
-
 export const HomeView = () => {
 
 const {

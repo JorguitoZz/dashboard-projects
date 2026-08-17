@@ -88,7 +88,8 @@ export interface Project {
   handlerOpenModal?: (state: ModalState) => void 
 }
 
-// Omitimos los campos que la base de datos genera solos para la creación
+export type ProjectBasicInfo = Pick<Project, 'client_name' | 'description'>;
+
 export type DataProyectType = Omit<Project, 'id' | 'status' >;
 
 export interface useSubmitTaskProps {

@@ -1,8 +1,8 @@
 import { memo, useCallback, useState } from "react";
 import { Badge } from "../ui/Badge";
 import type { Project} from "../../types/interface";
-import { Link } from "react-router-dom";
 import { deleteProject } from "../../services/service";
+import Link from "next/link";
 
 
 export const ProjectCard = memo(({
@@ -60,8 +60,7 @@ export const ProjectCard = memo(({
 
   return (
     <Link
-      to={`/dashboard/projects/${client_name.replaceAll(" ", "-").toLocaleLowerCase()}`}
-      state={{ projectFromState: { id, client_name, description } }}
+      href={`/dashboard/projects/${id}`}
       className="flex flex-col w-full md:w-[46%] lg:w-[30%] transition-transform hover:-translate-y-1 relative"
     >
       <article className="flex flex-col h-full bg-fondo-2 p-6 rounded-2xl border border-stroke hover:border-resaltado/50 transition-all duration-300 shadow-sm group">

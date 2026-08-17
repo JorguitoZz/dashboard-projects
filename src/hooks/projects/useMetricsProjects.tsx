@@ -1,38 +1,58 @@
 import { useEffect, useState } from "react"
-import { getProjectsMetrics } from "../../services/service"
-import type { ProjectDashboardMetrics } from "../../types/interface"
+import { getProject, getProjectsMetrics } from "../../services/service"
+import type { ProjectDashboardMetrics, ProjectBasicInfo } from "../../types/interface"
+
+export interface ProjectDashboardMetricsHook {
+  metrics: ProjectDashboardMetrics;
+  project: ProjectBasicInfo;
+}
 
 export const useMetricsProjects = (projectID: string, refreshTrigger: number) =>{
 
-    const [metrics, setMetrics] = useState<ProjectDashboardMetrics | null>(null)
+
+
+    const [data, setData] = useState<ProjectDashboardMetricsHook | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
 
-    useEffect(()=>{
+    useEffect(() => {
+        if (!projectID) return;
 
-        const fetchMetrics = async()=>{
-            setLoading(true)
+        const fetchMetrics = async () => {
+            setLoading(true);
+            setError(null);
 
-            const response = await getProjectsMetrics(projectID)
+            try {
+            const [resMetrics, resProject] = await Promise.all([
+                getProjectsMetrics(projectID),
+                getProject(projectID)
+            ]);
 
-            if (response.error) {
-                setError(response.error.message)
-                setMetrics(null)
-            } else {
-                setMetrics(response.data)
-                setError(null)
+            if (resMetrics.error || resProject.error) {
+                const errorMsg = resMetrics.error?.message || resProject.error?.message || 'Error al cargar la información';
+                setError(errorMsg);
+                setData(null);
+                return;
             }
 
-            setLoading(false)
-        }
 
-        if (projectID) {
-            fetchMetrics()
-        }
+            if (resMetrics.data && resProject.data) {
+                setData({
+                metrics: resMetrics.data,
+                project: resProject.data
+                });
+            }
+            } catch (err: any) {
+            setError(err.message || 'Error inesperado al conectar con el servidor');
+            } finally {
+            setLoading(false);
+            }
+        };
 
-    }, [projectID, refreshTrigger])
+        fetchMetrics();
+    }, [projectID, refreshTrigger]);
 
 
-    return {metrics, error, loading}
+    return {data, error, loading}
     
 }

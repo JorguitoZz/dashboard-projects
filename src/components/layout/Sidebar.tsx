@@ -1,14 +1,13 @@
 import { HomeIcon } from "../ui/HomeIcon";
 import { ProjectsIcon } from "../ui/ProjectsIcon";
 import { FinancesIcon } from "../ui/FinancesIcon";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 
 export const Sidebar = () => {
   const menuOptions = [
     { name: 'Home', Icon: HomeIcon, ruta: "/dashboard"},
     { name: 'Projects', Icon: ProjectsIcon, ruta: "/dashboard/projects" },
-    { name: 'Finances', Icon: FinancesIcon, ruta: "/dashboard/finances" },
   ];
 
   return (
@@ -31,7 +30,7 @@ export const Sidebar = () => {
         {menuOptions.map(({ name, Icon, ruta }) => (
           <Link
             key={name}
-            to={ruta}
+            href={ruta}
             className="
               flex flex-col items-center justify-center group
               /* DESKTOP: Icono al lado del texto */
