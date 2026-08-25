@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { getDashboardMetrics, getTaskDashboard  } from "../../services/service";
-import type { TaskVagasProps, StatCardProps, DashboardProjectMetric, ModalState } from "../../types/interface";
+import { useCallback, useState } from "react";
+import type { ModalState } from "../../types/interface";
 
 
 
