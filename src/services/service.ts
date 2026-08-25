@@ -1,72 +1,25 @@
 import { createClient } from "@/lib/supabase/client"
 
+
+
 import type { 
-  DataProyectType, 
   TaskItemProps, 
   ServiceResponse, 
   ServiceResponseData, 
   TaskHistoryItem, 
   ProjectDashboardMetrics,
-  DashboardProjectMetric,
-  TaskVagasProps,
-  Project,
   ProjectBasicInfo
 } from "../types/interface"
 
-export const insertProject = async(dataProyect: DataProyectType ) : Promise<ServiceResponse>=>{
-  try {
-    const { error } = await createClient()
-    .from('projects')
-    .insert([dataProyect])
-    .select()
-
-    if (error) {
-      return { success: false, error: error.message}
-    }
-    
-    return { success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Error Desconocido"
-    return { success: false, error: message}
-  }
-}
-
-export const editProject = async (id: string, dataActualizar: Omit<DataProyectType, 'status'>): Promise<ServiceResponse> => {
-  try {
-    const { error } = await createClient()
-      .from('projects')
-      .update(dataActualizar)
-      .eq('id', id);
-
-    if (error) {
-      return { success: false, error: error.message}
-    }
-
-    return { success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Error Desconocido"
-    return { success: false, error: message}
-  }
-}
-
-export const getProjects = async()=>{
-  try {
-    const response = await createClient()
-    .from('projects')
-    .select('*')
-    .order('inserted_at', {ascending: false})
-
-    return response
-  } catch (error) {
-    return {data: null, error}    
-  }
-}
 
 export const getTask = async(projectID: string | null) => {
   try{
+    const supabase = await createClient()
 
     if (projectID) {
-      const response = await createClient()
+
+
+      const response = await supabase
       .from('tasks')
       .select('*')
       .eq('project_id', projectID)
@@ -77,7 +30,7 @@ export const getTask = async(projectID: string | null) => {
     }
     
     
-      const response = await createClient()
+      const response = await supabase
       .from('tasks')
       .select('*')
       .eq('is_completed', false)
@@ -93,7 +46,10 @@ export const getTask = async(projectID: string | null) => {
 
 export const insertTask = async(dataTask: TaskItemProps )=>{
   try {
-    const response = await createClient()
+
+    const supabase = await createClient()
+
+    const response = await supabase
     .from('tasks')
     .insert([dataTask])
     .select()
@@ -104,23 +60,7 @@ export const insertTask = async(dataTask: TaskItemProps )=>{
   }
 }
 
-export const editTask = async (id: string, dataActualizar: Omit<TaskItemProps, 'id'>): Promise<ServiceResponse> => {
-  try {
-    const { error } = await createClient()
-      .from('tasks')
-      .update(dataActualizar)
-      .eq('id', id);
 
-    if (error) {
-      return { success: false, error: error.message}
-    }
-
-    return { success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Error Desconocido"
-    return { success: false, error: message}
-  }
-}
 
 export const deleteTask = async (id: string) : Promise<ServiceResponse> =>{
   if(!id.trim()){
@@ -128,7 +68,9 @@ export const deleteTask = async (id: string) : Promise<ServiceResponse> =>{
   }
 
   try {
-    const { error } = await createClient()
+    const supabase = await createClient()
+
+    const { error } = await supabase
       .from('tasks')
       .delete()
       .eq('id', id);
@@ -142,53 +84,13 @@ export const deleteTask = async (id: string) : Promise<ServiceResponse> =>{
   }
 }
 
-export const completeTask = async(hours: number, id: string): Promise<ServiceResponse> =>{
-  if (!hours && hours !== 0) {
-    return {success: false, error: 'Las horas son obligatorias'}
-  }
-
-  const dataActualizar = {
-    hours_spent: hours,
-    is_completed: true,
-  }
-
-  try {
-    const { error } = await createClient()
-    .from('tasks')
-    .update(dataActualizar)
-    .eq('id', id)
-
-    if(error) return {success: false, error: error.message}
-
-    return {success: true}
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Error desconocido";
-    return { success: false, error: message };    
-  }
-}
-
-export const deleteProject = async(id: string) : Promise<ServiceResponse> =>{
-  try {
-    const { error } = await createClient()
-    .from("projects")
-    .delete()
-    .eq('id', id)
-
-    if(error){
-      return { success: false, error: error.message }
-    }
-
-    return {success: true}
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Error desconocido";
-    return { success: false, error: message };
-  }
-}
 
 // Get Historial limitado a las últimas 10 completadas
 export const getTaskComplete = async (projectID: string): Promise<ServiceResponseData<TaskHistoryItem[]>> => {
   try {
-    const { data, error } = await createClient()
+    const supabase = await createClient()
+
+    const { data, error } = await supabase
       .from('tasks')
       .select('title, completed_at')
       .eq('project_id', projectID)
@@ -215,8 +117,9 @@ export const getTaskComplete = async (projectID: string): Promise<ServiceRespons
 export const getProjectsMetrics = async (projectID: string): Promise<ServiceResponseData<ProjectDashboardMetrics>> =>{
   
   try {
+    const supabase = await createClient()
 
-    const { data, error } = await createClient()
+    const { data, error } = await supabase
       .from('project_dashboard_metrics')
       .select('*')
       .eq('project_id', projectID)
@@ -237,7 +140,8 @@ export const getProjectsMetrics = async (projectID: string): Promise<ServiceResp
 
 export const getProject = async(projectID: string) : Promise<ServiceResponseData<ProjectBasicInfo>>=>{
   try {
-    const { data, error } = await createClient()
+    const supabase = await createClient()
+    const { data, error } = await supabase
     .from('projects')
     .select('client_name, description')
     .eq('id', projectID)
@@ -251,56 +155,5 @@ export const getProject = async(projectID: string) : Promise<ServiceResponseData
   } catch (error) {
     const message = error instanceof Error ? error.message : "Error desconocido";
     return { data: null, error: { message } };
-  }
-}
-
-
-export const getDashboardMetrics = async (): Promise<ServiceResponseData<DashboardProjectMetric[]>> => {
-  try {
-    const {data, error} = await createClient()
-    .from('projects')
-    .select('client_name, budget')
-
-    if(error){
-      return { data: null, error: { message: error.message } }; 
-    }
-
-    return { data: data, error: null };
-
-  } catch (error) {
-      const message = error instanceof Error ? error.message : "Error desconocido";
-      return { data: null, error: { message } };
-  }
-}
-
-export const getTaskDashboard = async (): Promise<ServiceResponseData<TaskVagasProps[]>> => {
-  try {
-    // 1. Resolver el cliente de Supabase
-    const supabase = createClient()
-
-    // 2. Obtener el usuario actual
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if (!user) {
-      return { data: null, error: { message: "Usuario no autenticado" } }
-    }
-
-    // 3. Consultar las tareas filtrando por el user_id
-    const { data, error } = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('user_id', user.id) // 👈 Filtra por el usuario logueado
-      .eq('is_completed', false)
-      .order('inserted_at', { ascending: false })
-
-    if (error) {
-      return { data: null, error: { message: error.message } }
-    }
-
-    return { data, error: null }
-
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Error desconocido"
-    return { data: null, error: { message } }
   }
 }

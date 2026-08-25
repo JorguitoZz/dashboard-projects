@@ -1,9 +1,9 @@
 import { useCompleteTask } from "../../hooks/tasks/useCompleteTask";
 import type { ModalProps } from "../../types/interface";
 
-export const TaskModalComplete = ({ closeModal, onSuccess, task }: ModalProps) => {
+export const TaskModalComplete = ({ closeModal, task }: ModalProps) => {
   
-  const {handlerSubmit} = useCompleteTask({closeModal, onSuccess, taskID : task?.id})
+  const {handlerSubmit} = useCompleteTask({closeModal, taskID : task?.id})
   
   if (!task) return null;
   

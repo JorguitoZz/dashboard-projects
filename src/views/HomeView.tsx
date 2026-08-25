@@ -1,31 +1,80 @@
-import { useCallback } from "react";
 import { IncomeItem } from "../components/dashboard/IncomeItem";
 import { StatCard } from "../components/dashboard/StatCard";
-import { TaskVagas } from "../components/dashboard/TaskVagas";
 import { IncomeBreakdownSection } from "../components/layout/IncomeBreakdownSection";
 import { StatCardsSection } from "../components/layout/StatCardsSection";
 import { TaskVagasSection } from "../components/layout/TaskVagasSection";
-import { EditTaskModal } from "../components/projects/EditTaskModal";
-import { TaskModalComplete } from "../components/projects/TaskModalComplete";
-import { useDataDashboard } from "../hooks/dashboard/useDataDashboard";
-import type { TaskItemProps} from "../types/interface";
+import { getDashboardMetrics, getTaskDashboard } from "@/services/server-services";
+import type { StatCardProps, DashboardProjectMetric } from "@/types/interface";
+import { DashboardClientManager } from "../components/dashboard/dashboardClientManager";
 
-export const HomeView = () => {
+export const HomeView = async() => {
 
-const {
-        totalGoal,
-        dataStatCard,
-        dataTaskVagas,
-        dashboardMetrics,
-        modal,
-        setModal,
-        getTask,
-        closeModal
- } = useDataDashboard()  
- 
- const onSuccess = useCallback( async() =>{
-        await getTask()
-  }, [getTask])
+  const getTask = async () =>{
+        try{
+          const {data, error} = await getTaskDashboard()
+  
+          if (error) {
+            console.error(error.message); 
+            return [];   
+          }
+  
+          if (data) {
+            return data
+          }
+  
+        }catch (error) {
+          console.error(error);
+          return []
+        }
+      }
+
+  const DataTaskVagas = await getTask()    
+
+  const getdataProjects = async () => {
+        try {
+          const { data, error } = await getDashboardMetrics();
+          
+          if (error) {
+            console.error(error.message); 
+            return []
+          }
+
+          return data
+
+        } catch (error) {
+          console.error(error);
+          return []
+        }
+      }
+
+  const dashboardMetrics = await getdataProjects()    
+      
+  const totalGoal =  dashboardMetrics?.reduce((acc: number, currValue: DashboardProjectMetric) => {
+          return acc + currValue.budget;
+        }, 0);
+
+        
+
+  const dataStatCard : StatCardProps[] = [
+        {
+          title: 'Total Mensual (USD)',
+          icon: '💰',
+          data: `${totalGoal}`,
+          color: 'resaltado',
+        },
+        {
+          title: 'Tareas',
+          icon: '⏱️',
+          data: `${DataTaskVagas && DataTaskVagas?.length} Pendientes`,
+          color: 'resaltado',
+        },
+        {
+          title: 'Proyectos',
+          icon: '🚀',
+          data: `${dashboardMetrics?.length} Activos`,
+          color: 'resaltado',
+        }
+        ]
 
 return (
 
@@ -38,35 +87,17 @@ return (
 
         <div className="flex flex-col lg:flex-row lg:w-[90%] lg:mx-auto lg:gap-5">
           <TaskVagasSection>
-            {dataTaskVagas.map(task => (
-              <TaskVagas key={task.id} {...task} setModal={setModal} onSuccess={onSuccess} />
-            ))}
+            <DashboardClientManager dataTaskVagas={DataTaskVagas ?? []} />
           </TaskVagasSection>
 
           <IncomeBreakdownSection>
-            <IncomeItem clientName={'Ingresos Totales'} amount={totalGoal} totalGoal={totalGoal} />
-            {dashboardMetrics.map(e => (
+            <IncomeItem clientName={'Ingresos Totales'} amount={totalGoal as number} totalGoal={totalGoal} />
+            {dashboardMetrics!.map(e => (
               <IncomeItem key={e.client_name} clientName={e.client_name} amount={e.budget} totalGoal={totalGoal} />
             ))}
           </IncomeBreakdownSection>
         </div>
         
-              {modal.isOpen && modal.type === "edit" && (
-                <EditTaskModal 
-                  closeModal={closeModal} 
-                  task={modal.data as TaskItemProps | null} 
-                  onSuccess={getTask} 
-                />
-              )}
-        
-              {modal.isOpen && modal.type === "complete" && (
-                <TaskModalComplete 
-                  closeModal={closeModal} 
-                  task={modal.data as TaskItemProps | null} 
-                  onSuccess={getTask} 
-        
-                />
-              )}
+              
       </div>
-);
-};
+);}

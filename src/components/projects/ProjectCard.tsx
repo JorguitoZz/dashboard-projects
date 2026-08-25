@@ -1,8 +1,8 @@
 import { memo, useCallback, useState } from "react";
 import { Badge } from "../ui/Badge";
 import type { Project} from "../../types/interface";
-import { deleteProject } from "../../services/service";
 import Link from "next/link";
+import { deleteProjectAction } from "@/serverActions/DeleteProjectAction";
 
 
 export const ProjectCard = memo(({
@@ -27,7 +27,7 @@ export const ProjectCard = memo(({
 
   const handlerDelete = useCallback( async () => {
     try {
-      const { error } = await deleteProject(id);
+      const { error } = await deleteProjectAction(id);
 
       if (error) {
         console.log(error);

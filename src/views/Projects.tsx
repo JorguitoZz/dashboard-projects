@@ -1,15 +1,29 @@
+'use client'
 import { ProjectCard } from "../components/projects/ProjectCard";
 import { AddProjectModal } from "../components/projects/AddProjectModal";
 import { SkeletonProjectCard } from "../components/skeletons/SkeletonProjectCard";
-import { useGetProjects } from "../hooks/projects/useGetProjects";
-import type { Project, } from "../types/interface";
-import { useCallback } from "react";
+import type { Project, ModalState } from "../types/interface";
+import { memo, useCallback, useState } from "react";
 
 
-export const Projects = () => {
+interface ProjectsProps {
+  projects: Project[];
+}
+
+export const Projects = ({ projects }: ProjectsProps) => {
   
-  const {projectList, openModal, handlerOpenModal, isLoading, fetchProjects} = useGetProjects()
-  
+  const [openModal, setOpenModal] = useState<ModalState >({
+    isOpen: false,
+    data: null,
+  });
+    
+  const handlerOpenModal = useCallback(({isOpen, data}: ModalState) =>{
+    setOpenModal({
+      isOpen,
+      data
+    })
+  }, [])
+
   const handlerModalClose = useCallback(() =>{
     handlerOpenModal({isOpen: false, data: null})
   }, [handlerOpenModal])
@@ -41,12 +55,11 @@ export const Projects = () => {
       
       <div className="flex flex-col gap-5 pb-20 pt-5 md:flex-row flex-wrap">
         
-       {isLoading ? (
+       {projects.length < 1 ? (
         [1, 2, 3].map((e) => <SkeletonProjectCard key={e} />)
-        ) : projectList.length > 0 ? (
-          // 2. Si NO carga Y hay proyectos, mapeamos
-          projectList.map((proyecto) => (
-            <ProjectCard key={proyecto.id} {...proyecto} onSucces={fetchProjects} handlerOpenModal={handlerOpenModal}/>
+        ) : projects.length > 0 ? (
+          projects.map((proyecto) => (
+            <ProjectCard key={proyecto.id} {...proyecto} handlerOpenModal={handlerOpenModal}/>
           ))
         ) : (
           <div className="col-span-full py-10 text-center">
@@ -58,7 +71,7 @@ export const Projects = () => {
         
       </div>
 
-      {openModal.isOpen && <AddProjectModal project={openModal.data as Project | null} onSuccess={fetchProjects} closeModal={()=>{handlerModalClose()}}/>}  
+      {openModal.isOpen && <AddProjectModal project={openModal.data as Project | null} closeModal={()=>{handlerModalClose()}}/>}  
 
     </section>
   )

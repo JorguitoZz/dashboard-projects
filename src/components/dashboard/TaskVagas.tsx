@@ -1,7 +1,7 @@
 import { Badge } from "../ui/Badge";
 import type { TaskVagasProps } from "../../types/interface";
 import { memo } from "react";
-import { deleteTask } from "../../services/service";
+import { deleteTaskAction } from "@/serverActions/DeleteTaskAction";
 
 export const TaskVagas = memo(({
   id,
@@ -10,8 +10,8 @@ export const TaskVagas = memo(({
   description, 
   category,
   setModal, 
-  onSuccess, 
-}: TaskVagasProps & { onSuccess: () => void }) => {
+
+}: TaskVagasProps) => {
 
   const isCompleted = status === 'success';
 
@@ -20,11 +20,9 @@ export const TaskVagas = memo(({
     if (!siBorrar) return;
 
     if (id) {
-      const res = await deleteTask(id);
+      const res = await deleteTaskAction(id);
   
-      if (res.success) {
-        await onSuccess();
-      } else {
+      if (!res.success) {
         console.error(res.error);
       }
     }
@@ -64,13 +62,7 @@ export const TaskVagas = memo(({
         </div>
 
         {/* Icono para cambiar estatus (abre el selector de estado) */}
-        <button 
-          onClick={() => setModal?.({ isOpen: true, type: "status_change", data: { id, title, status }})}
-          className="p-1.5 hover:bg-stroke rounded-lg transition-colors text-secundary hover:text-resaltado flex items-center justify-center"
-          title="Cambiar estatus"
-        >
-          <span className="material-symbols-outlined text-[20px]">sync_alt</span>
-        </button>
+        
       </div>
         
       {/* Footer: Horas y Acciones rápidas */}

@@ -90,7 +90,7 @@ export interface Project {
 
 export type ProjectBasicInfo = Pick<Project, 'client_name' | 'description'>;
 
-export type DataProyectType = Omit<Project, 'id' | 'status' >;
+export type DataProjectType = Omit<Project, 'id' | 'status' >;
 
 export interface useSubmitTaskProps {
     projectID? : string,

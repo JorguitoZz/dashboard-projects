@@ -8,11 +8,10 @@ interface EditModalProjectProps extends ModalProps {
 }
 
 
-export const AddProjectModal = ({ onSuccess, closeModal, project }: EditModalProjectProps) => {
+export const AddProjectModal = ({closeModal, project }: EditModalProjectProps) => {
 
-  const { isLoading, error, creaProyecto } = useAddProjectModal({onSuccess, closeModal, projectID : project?.id})
+  const { isLoading, error, creaProyecto } = useAddProjectModal({closeModal, projectID : project?.id})
 
-  console.log(error)
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-background-dark/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
