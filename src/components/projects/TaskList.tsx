@@ -41,7 +41,7 @@ export const TaskList = memo(({ projectID, setRefreshTrigger }: { projectID: str
       ) : tasks.length ? (
         <div className="custom-scrollbar max-h-87.5 overflow-y-auto pr-3 [mask-image:linear-gradient(to_bottom,white_85%,transparent)] flex flex-col gap-3">
           {tasks.map((task) => (
-            <TaskVagas key={task.id} {...task} setModal={setModal} onSuccess={handleActualizacion} />
+            <TaskVagas key={task.id} {...task} setModal={setModal} />
           ))}
         </div>
       ) : (
