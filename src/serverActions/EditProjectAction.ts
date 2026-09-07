@@ -1,5 +1,5 @@
 'use server'
-import { editProject} from "@/services/server-services";
+import { editProject} from "@/services/services";
 import { ServiceResponse, DataProjectType  } from "@/types/interface";
 import { revalidatePath } from "next/cache";
 

@@ -1,9 +1,11 @@
-'use client';
 import { ProjectDetail } from "@/views/ProjectDetail";
-import { useParams } from "next/navigation";
 
-export default function ProjectDetailPage() {
-  const params = useParams();
-  // params.id contiene el valor de la URL
-  return <ProjectDetail />;
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function ProjectDetailPage({ params }: PageProps) {
+  const { id } = await params; // Resuelves el id en la página
+
+  return <ProjectDetail id={id} />;
 }

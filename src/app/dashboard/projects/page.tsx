@@ -1,4 +1,4 @@
-import { getProjects } from "@/services/server-services";
+import { getProjects } from "@/services/services";
 import type { Project } from "@/types/interface";
 import { Projects, Projects as ProjectView } from "@/views/Projects";
 

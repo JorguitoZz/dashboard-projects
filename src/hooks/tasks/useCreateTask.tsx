@@ -1,9 +1,9 @@
 import { useState } from "react"; // 1. Importamos useState
-import { insertTask } from "../../services/service";
 import type { TaskItemProps, useSubmitTaskProps } from "../../types/interface";
+import { insertTaskAction } from "@/serverActions/InsertTaskAction";
 
 
-export const useCreateTask = ({projectID, onSuccess = () => {}, closeModal }: useSubmitTaskProps) =>{
+export const useCreateTask = ({projectID, closeModal }: useSubmitTaskProps) =>{
 
 const [isLoading, setIsLoading] = useState(false);
 
@@ -24,26 +24,24 @@ const [isLoading, setIsLoading] = useState(false);
     };
 
     try {
-      const response = await insertTask(dataTarea);
+      const response = await insertTaskAction(dataTarea);
 
       if (!response) {
         console.log('error, la base de datos no ha respondido');
         return;
       }
 
-      const { data, error } = response;
+      const { success, error } = response;
 
       if (error) {
         console.error(error);
         return;
       }
 
-      console.log("Tarea creada:", data);
-      
-      if(onSuccess){
-        await onSuccess()
+      if (success) {
+        closeModal();
       }
-      closeModal();
+      
 
     } catch (error) {
       console.error(error);

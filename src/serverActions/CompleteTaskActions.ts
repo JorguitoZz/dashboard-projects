@@ -1,6 +1,6 @@
 'use server'
 
-import { completeTask } from "@/services/server-services";
+import { completeTask } from "@/services/services";
 import { ServiceResponse } from "@/types/interface";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";

@@ -5,10 +5,10 @@ interface EditModalProps extends ModalProps {
   task: TaskItemProps | null;
 }
 
-export const EditTaskModal = ({ closeModal, task, onSuccess }: EditModalProps) => {
+export const EditTaskModal = ({ closeModal, task}: EditModalProps) => {
 
   
-  const {handleSubmit} = useEditTaskModal({taskID: task?.id, closeModal, onSuccess})
+  const {handleSubmit} = useEditTaskModal({taskID: task?.id, closeModal})
   
   if (!task) return null;
 

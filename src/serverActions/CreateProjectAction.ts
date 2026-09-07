@@ -1,5 +1,5 @@
 'use server'
-import { insertProject } from "@/services/server-services";
+import { insertProject } from "@/services/services";
 import { ServiceResponse, DataProjectType  } from "@/types/interface";
 import { revalidatePath } from "next/cache";
 

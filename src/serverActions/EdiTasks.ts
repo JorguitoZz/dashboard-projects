@@ -1,6 +1,6 @@
 'use server'
 
-import { editTask } from "@/services/server-services";
+import { editTask } from "@/services/services";
 import type { ServiceResponse, TaskItemProps } from "@/types/interface";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";

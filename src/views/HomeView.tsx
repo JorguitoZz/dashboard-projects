@@ -3,7 +3,7 @@ import { StatCard } from "../components/dashboard/StatCard";
 import { IncomeBreakdownSection } from "../components/layout/IncomeBreakdownSection";
 import { StatCardsSection } from "../components/layout/StatCardsSection";
 import { TaskVagasSection } from "../components/layout/TaskVagasSection";
-import { getDashboardMetrics, getTaskDashboard } from "@/services/server-services";
+import { getDashboardMetrics, getTaskDashboard } from "@/services/services";
 import type { StatCardProps, DashboardProjectMetric } from "@/types/interface";
 import { DashboardClientManager } from "../components/dashboard/dashboardClientManager";
 

@@ -1,11 +1,11 @@
 import { useCreateTask } from "../../hooks/tasks/useCreateTask";
 import type { ModalProps} from "../../types/interface";
 
-export const AddTaskModal = ({ closeModal, projectID, onSuccess }: ModalProps) => {
+export const AddTaskModal = ({ closeModal, projectID }: ModalProps) => {
   
   const safeProjectID = projectID ?? undefined
 
-  const {isLoading, crearTarea} = useCreateTask({projectID: safeProjectID, onSuccess, closeModal})
+  const {isLoading, crearTarea} = useCreateTask({projectID: safeProjectID, closeModal})
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-background-dark/80 backdrop-blur-md p-4 animate-in fade-in duration-300">

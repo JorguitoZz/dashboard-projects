@@ -1,5 +1,5 @@
 'use server'
-import { deleteTask } from "@/services/service";
+import { deleteTask } from "@/services/services";
 import { ServiceResponse } from "@/types/interface";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";

@@ -1,5 +1,4 @@
-
-import { useTaskProjects } from "../../hooks/projects/useTaskProjects";
+'use client'
 import { TaskVagas } from "../dashboard/TaskVagas";
 import { AddTaskModal } from "./AddTaskModal";
 import { EditTaskModal } from "./EditTaskModal";
@@ -7,14 +6,8 @@ import { TaskModalComplete } from "./TaskModalComplete";
 import type { TaskItemProps } from "../../types/interface"
 import { memo } from "react";
 
-export const TaskList = memo(({ projectID, setRefreshTrigger }: { projectID: string, setRefreshTrigger: React.Dispatch<React.SetStateAction<number>>; }) => {
+export const TaskList = memo(() => {
   
-  const { closeModal, isLoading, tasks, modal, setModal, fetchTask } = useTaskProjects(projectID)
-
-  const handleActualizacion = () =>{
-    fetchTask()
-    setRefreshTrigger(prev => prev + 1)
-  }
 
   return (
     <section className="flex flex-col">
