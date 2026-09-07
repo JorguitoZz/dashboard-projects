@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getProject, getProjectsMetrics } from "../../services/service"
+import { getProject, getProjectsMetrics } from "../../services/services"
 import type { ProjectDashboardMetrics, ProjectBasicInfo } from "../../types/interface"
 
 export interface ProjectDashboardMetricsHook {
