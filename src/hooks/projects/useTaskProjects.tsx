@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"; 
 import type { ModalState, TaskItemProps } from "../../types/interface"; // Usamos solo una interfaz consistente
-import { getTask } from "../../services/service";
+import { getTask } from "../../services/services";
 
 export const useTaskProjects = (
   projectID: string | null, 
