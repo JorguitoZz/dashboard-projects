@@ -1,5 +1,5 @@
 import { editTaskAction } from "@/serverActions/EdiTasks";
-import type { useSubmitTaskProps, TaskItemProps } from "../../types/interface";
+import type { useSubmitTaskProps } from "../../types/interface";
 
 export const useEditTaskModal = ({taskID, closeModal = () => {}} : useSubmitTaskProps)  =>{
 

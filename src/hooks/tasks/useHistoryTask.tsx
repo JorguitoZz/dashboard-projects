@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { taskHistory } from "../../types/interface"
-import { getTaskComplete } from "../../services/service"
+import { getTaskComplete } from "../../services/services"
 
 export const useHistoryTask = (projectID: string, dataRefresh : number) => {
     const [taskHistory, setTaskHistory] = useState<taskHistory | null>(null)
